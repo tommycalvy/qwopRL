@@ -8,5 +8,8 @@
     "test": "test"
   },
   "author": "Tommy Calvy",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^7.1.6"
+  }
 }
