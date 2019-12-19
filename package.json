@@ -2,8 +2,9 @@
   "name": "qwoprl",
   "version": "1.0.0",
   "description": "Deep Reinforcement Learning From Human Preference With QWOP Game",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
+    "start": "electron .",
     "test": "test"
   },
   "author": "Tommy Calvy",
