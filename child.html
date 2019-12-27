@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <style type="text/css">
+      html, body {
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="qwop-player">
+      <object type="application/x-shockwave-flash" data="qwop.swf" width="160px" height="100px" id="flashgame">
+        <param name="base" value="qwop.swf">
+        <param name="quality" value="autohigh">
+        <param name="allowFullScreen" value="false">
+        <param name="wmode" value="direct">
+        <param name="allowScriptAccess" value="always">
+        <param name="scale" value="showall">
+        <param name="bgcolor" value="#000000">
+        <param name="hasPriority" value="true">
+        <param value="internal" name="allownetworking">
+      </object>
+    </div>
+  </body>
+  <script src="child.js"></script>
+</html>
