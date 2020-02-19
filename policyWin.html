@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <style type="text/css">
+      .video-wrapper {
+        display: flex;
+        justify-content: space-evenly;
+      }
+      .video1 {
+        border-style: solid;
+        border-width: 3px;
+      }
+      .video2 {
+        border-style: solid;
+        border-width: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="video-wrapper">
+      <button type="button" onclick="recordPreference(0.5)">Equal</button>
+      <div class="video1">
+        <button type="button" onclick="recordPreference(0)">Clip 1</button>
+        <canvas id="vid1" width="500" height="500"></canvas>
+      </div>
+      <div class="video2">
+        <button type="button" onclick="recordPreference(1)">Clip 2</button>
+        <canvas id="vid2" width="500" height="500"></canvas>
+      </div>
+      <button type="button" onclick="recordPreference(NULL)">Not Comparable</button>
+    </div>
+    <img id="show" src="" />
+  </body>
+  <script src="policyWin.js"></script>
+</html>

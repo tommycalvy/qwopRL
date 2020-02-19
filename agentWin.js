@@ -1,13 +1,56 @@
-const ipc = require('electron').ipcRenderer
-ipc.send('child-ready', 'ping')
-console.log("Child Is Ready")
+const ipc = require('electron').ipcRenderer;
+
+
+let arg = window.process.argv.slice(-2);
+let policyId = parseInt(arg[1]);
+let id = parseInt(arg[0]);
+
+
+policy = new ActorCritic(4, 81, 81, 0.995, 0.995)
+agent = new Agent(policy, id, 4)
+ipc.send('agent-ready', id);
+
+
+
+
+ipc.on('frame-id-' + id, (event, frame) => {
+  let output = agent.step(frame)
+  if (output != NULL) {
+    ipc.sendSync('action', [idn, output[0]])
+    ipc.sendTo(policyId, 'ppo-data', output)
+  }
+})
+
+
+
+/*
+
+function start() {
+  var e = jQuery.Event("keydown", {keyCode: 81, which:81});
+  setTimeout(() => {
+    $("#flashgame").focus();
+
+    $("body").trigger(e);
+  }, 4000)
+}
+
+
+window.onload = start();
+
+
+
+
+
+
+
+
 //document.elementFromPoint(80, 50).click()
 //const flashgame = document.getElementById('flashgame')
 //flashgame.elementFromPoint(x, y).click()
-const x = document.getElementById("flashgame")
-x.addEventListener("click", function() {
-  console.log("Click happened in child window")
-})
+//const x = document.getElementById("flashgame")
+//x.addEventListener("click", function() {
+//console.log("Click happened in child window")
+//})
 function click(x, y)
 {
     var ev = new MouseEvent('click', {
@@ -21,6 +64,9 @@ function click(x, y)
     var el = document.elementFromPoint(x, y)
 
     el.dispatchEvent(ev)
+}
+function simulateKeyPress(character) {
+  jQuery.event.trigger({ type : 'keypress', which : character.charCodeAt(0) });
 }
 click(80, 50)
 var actions = [
@@ -64,3 +110,4 @@ ipc.on('action', (event, arg) => {
     }
   }
 })
+*/

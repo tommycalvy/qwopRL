@@ -13,5 +13,8 @@
     "electron": "^7.1.6"
   },
   "dependencies": {
+    "jquery": "^3.4.1",
+    "mathjs": "^6.6.0",
+    "sqlite3": "^4.1.1"
   }
 }
