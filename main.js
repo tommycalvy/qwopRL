@@ -2,6 +2,18 @@ const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 app.commandLine.appendSwitch('ppapi-flash-path', app.getPath('pepperFlashSystemPlugin'))
 
+global.params = {
+  ppo_steps: 100,
+  framesStacked: 4,
+  input_width: 81,
+  input_height: 81,
+  actor_lr: 0.995,
+  critic_lr: 0.995,
+  reward_lr: 0.95,
+  game_choice: 'qwop'
+}
+
+
 let agentWindows = []
 let policyWindow
 let frame_count = []
@@ -50,70 +62,15 @@ app.on('ready', () => {
   createAgentWindows(2, policyId)
 })
 
-let actionSet = [
-  {
-    down: false,
-    key: "Q"
-  },
-  {
-    down: false,
-    key: "W"
-  },
-  {
-    down: false,
-    key: "O"
-  },
-  {
-    down: false,
-    key: "P"
-  }
-]
 
-function sendAction(agentWin, action) {
-  var i
-  for (i = 0; i < 4; i++) {
-    if (action[i] && !actionSet[i].down) {
-      actionSet[i].down = true
-      agentWin.webContents.sendInputEvent({ type: 'keyDown', keyCode: actionSet[i].key })
-    } else if (!action[i] && actionSet[i].down) {
-      actionSet[i].down = false
-      agentWin.webContents.sendInputEvent({ type: 'keyUp', keyCode: actionSet[i].key })
-    }
-  }
-}
 
-ipcMain.on('agent-ready', (event, arg) => {
-  let idn = arg[0]
-  let ids = arg[1]
-  console.log("Agent ", ids, " Is Ready")
-  setTimeout(() => {
-      agentWindows[idn].webContents.sendInputEvent({type:'mouseDown', x: 80, y: 50, button:'left', clickCount: 1})
-  }, 250)
-  setTimeout(() => {
-      agentWindows[idn].webContents.sendInputEvent({type:'mouseUp', x: 80, y: 50, button:'left', clickCount: 1})
-      agentWindows[idn].webContents.on('paint', (event, dirty, image) => {
-        agentWindows[idn].webContents.send('frame-id-' + ids, image);
-        frame_count[idn] += 1;
-        if (frame_count[idn] % 4 == 0) {
-          agentWindows[arg[0]].webContents.stopPainting();
-          step_count[idn] += 1;
-        }
-      })
-  }, 300)
-})
 
-ipcMain.on('action', (event, arg) => {
-  sendAction(agentWindows[arg[0]], arg[1]);
-  if (step_count[arg[0]] == ppo_steps) {
-    step_count[arg[0]] = 0;
-  } else {
-    agentWindows[arg[0]].webContents.startPainting();
-  }
-})
 
-ipcMain.on('start-painting', (event, arg) => {
-  agentWindows[arg[0]].webContents.startPainting();
-})
+
+
+
+
+
   /*
   setTimeout(() => {
     count = 0

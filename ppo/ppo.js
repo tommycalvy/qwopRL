@@ -1,4 +1,4 @@
-module.exports = class ActorCritic {
+module.exports = class PPO {
   // https://naifmehanna.com/2019-02-01-implementing-a2c-algorithm-using-tensorflow-js/
   constructor(frames, pixWidth, pixHeight, actor_lr, critic_lr){
     this.frames = frames;
@@ -6,7 +6,8 @@ module.exports = class ActorCritic {
     this.height = pixHeight;
     this.actor_lr = actor_lr;
     this.critic_lrr = critic_lr;
-
+    this.gamma = 0.99;
+    this.tau = 0.95;
     this.actor = this.build_actor();
     this.critic = this.build_critic();
   }
@@ -173,27 +174,30 @@ module.exports = class ActorCritic {
     return model;
   }
   get actor() {
-    return this.actor
+    return this.actor;
   }
 
   get critic() {
-    return this.critic
+    return this.critic;
   }
 
-  compute_gae(values, rewards) {
-    let gae = 0
-    let returns = []
-    for (let i = this.ppo_steps - 1; i > 0; i--) {
-      let delta = rewards[i] + this.gamma * values[i] - values[i - 1]
-      let gae = delta + this.gamma * this.tau * gae
-      returns.unshift(gae + values[i])
+  compute_gae(next_value, values, rewards) {
+    values.push(next_value);
+    let gae = 0;
+    let delta;
+    let gae;
+    let returns = [];
+    for (let i = this.num_steps - 1; i >= 0; i--) {
+      delta = rewards[i] + this.gamma * values[i + 1] - values[i];
+      gae = delta + this.gamma * this.tau * gae;
+      returns.unshift(gae + values[i]);
     }
-    return returns
+    return returns;
   }
 
   ppo_update() {
     for (let i = 0; i < this.ppo_epochs; i++) {
-
+      
     }
   }
 

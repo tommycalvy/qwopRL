@@ -91,4 +91,8 @@ module.exports = class Reward {
   get rewardModel() {
     return this.reward;
   }
+
+  set rewardModel(model) {
+    this.reward = model;
+  }
 }

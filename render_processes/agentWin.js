@@ -1,4 +1,16 @@
-const ipc = require('electron').ipcRenderer;
+const remote = require('electron').remote;
+let win = remote.getCurrentWindow();
+
+let params = remote.getGlobal('params');
+let ppo_steps = params.ppo_steps;
+let framesStacked = params.frames;
+let input_width = params.input_width;
+let input_height = params.input_height;
+let actor_lr = params.actor_lr;
+let critic_lr = params.critic_lr;
+let reward_lr = params.reward_lr;
+let game_choice = params.game_choice;
+
 
 
 let arg = window.process.argv.slice(-2);
@@ -6,13 +18,30 @@ let policyId = parseInt(arg[1]);
 let id = parseInt(arg[0]);
 
 
-policy = new ActorCritic(4, 81, 81, 0.995, 0.995)
-agent = new Agent(policy, id, 4)
-ipc.send('agent-ready', id);
+let ppo = new PPO(
+  framesStacked,
+  input_width,
+  input_height,
+  actor_lr,
+  critic_lr
+);
+let agent = new Agent(ppo, id, 4);
+let reward = new Reward(framesStacked, input_width, input_height, reward_lr);
+let game = new FlashGameAdapter(game_choice, win.webContents, agent, framesStacked);
 
 
 
 
+
+game.start_game();
+
+
+
+//ipc.send('agent-ready', id);
+
+
+
+/*
 ipc.on('frame-id-' + id, (event, frame) => {
   let output = agent.step(frame)
   if (output != NULL) {
@@ -20,7 +49,27 @@ ipc.on('frame-id-' + id, (event, frame) => {
     ipc.sendTo(policyId, 'ppo-data', output)
   }
 })
+*/
 
+ipcMain.on('agent-ready', (event, arg) => {
+  let idn = arg[0]
+  let ids = arg[1]
+  console.log("Agent ", ids, " Is Ready")
+
+})
+
+ipcMain.on('start-painting', (event, arg) => {
+  agentWindows[arg[0]].webContents.startPainting();
+})
+
+ipcMain.on('action', (event, arg) => {
+  sendAction(agentWindows[arg[0]], arg[1]);
+  if (step_count[arg[0]] == ppo_steps) {
+    step_count[arg[0]] = 0;
+  } else {
+    agentWindows[arg[0]].webContents.startPainting();
+  }
+})
 
 
 /*
