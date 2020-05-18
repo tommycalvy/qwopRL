@@ -57,7 +57,7 @@ module.exports = class Agent {
     let sum = 0;
     let prob = actionDist[0];
     let action = 0;
-    for (let i = 0; i < Math.pos(this.num_of_actions, 2); i++) {
+    for (let i = 0; i < Math.pow(this.num_of_actions, 2); i++) {
       sum += actionDist[i]
       if (sum <= rand) {
         action = i;
@@ -94,9 +94,9 @@ module.exports = class Agent {
       if (this.step_count % this.num_steps) {
         let returns = ppo.compute_gae(value, this.values, this.rewards);
         // TODO: upload trajectory to indexDB
-        let advantage = [];
+        let advantages = [];
         for (let i = 0; i < this.num_steps; i++) {
-          advantage.push(returns[i] - this.values[i]);
+          advantages.push(returns[i] - this.values[i]);
         }
         ppo.ppo_update();
 
