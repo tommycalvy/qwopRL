@@ -10,7 +10,7 @@
   "author": "Tommy Calvy",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^7.1.6"
+    "electron": "^15.5.5"
   },
   "dependencies": {
     "jquery": "^3.4.1",
